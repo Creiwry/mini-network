@@ -9,6 +9,7 @@ import { PrivateRoute } from './Components/ProtectedRoute'
 import { Profile } from './Pages/Profile'
 import { Navbar } from './Components/Navbar'
 import { EditProfile } from './Pages/EditProfile'
+import { Post } from './Pages/Post'
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/signIn" element={<SignIn />} />
           <Route path="/register" element={<Register />} />
           <Route path='/home' element={<Home />} />
+          <Route path='/post/:id' element={<Post />} />
           <Route path="/me" element={
             <PrivateRoute>
                 <Profile />
