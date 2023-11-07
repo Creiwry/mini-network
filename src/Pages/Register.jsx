@@ -1,6 +1,8 @@
+import { useSetAtom } from "jotai";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { userAtom } from "../atoms";
 
 const Register = () => {
   const [ pending, setPending ] = useState(false)
@@ -8,6 +10,7 @@ const Register = () => {
   const [ email, setEmail] = useState('')
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
+  const setUser = useSetAtom(userAtom)
   const signUpUrl = 'http://localhost:1337/api/auth/local/register';
   const navigate = useNavigate();
 
@@ -25,9 +28,10 @@ const Register = () => {
     })
     .then(response => response.json())
     .then(data => {
-      Cookies.set('token', data.jwt);
-      setPending(false);
-      navigate('/home');
+        Cookies.set('token', data.jwt);
+        setUser(data.user)
+        setPending(false);
+        navigate('/home');
     })
     .catch(err => {
         setPending(false);

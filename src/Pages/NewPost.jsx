@@ -1,35 +1,19 @@
+import { useAtomValue } from "jotai";
 import Cookies from "js-cookie";
-import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { userAtom } from "../atoms";
 
 const NewPost = () => {
-  const userUrl = 'http://localhost:1337/api/users/me'
-  const url = `http://localhost:1337/api/posts/`;
+  const url = `http://localhost:1337/api/posts?populate=*`;
   const [ post, setPost ] = useState('')
-  const [ user, setUser ] = useState('')
+  const user = useAtomValue(userAtom) 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetch(userUrl, {
-        method: 'get', 
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${Cookies.get('token')}`
-        },
-      })
-    .then(response => response.json())
-    .then(data => { 
-        setUser(data.id);
-      })
-    .catch((error) => {
-        console.error(error);
-      });
-  }, []);
 
   const updatePost = (e) => {
     e.preventDefault();
-    const postInfo = {data:{ text: post, user: user }}
+    console.log(user.id)
+    const postInfo = {data:{ text: post, users_permissions_user: { id: user.id } }}
 
     fetch(url, {
         method: 'post', 

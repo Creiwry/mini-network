@@ -1,11 +1,17 @@
+import { useSetAtom } from "jotai";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { userAtom } from "../atoms";
+import { RESET } from "jotai/utils";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const setUser = useSetAtom(userAtom)
+
   const signOut = () => {
     Cookies.remove('token')
+    setUser(RESET);
     navigate('/signIn')
   }
 

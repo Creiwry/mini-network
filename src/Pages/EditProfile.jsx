@@ -2,6 +2,8 @@ import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAtomValue } from "jotai";
+import { userAtom } from "../atoms";
 
 const EditProfile = () => {
   const fetchUrl = 'http://localhost:1337/api/users/me'
@@ -10,23 +12,36 @@ const EditProfile = () => {
   const [ username, setUsername ] = useState(profileInfo.username)
   const putUrl = `http://localhost:1337/api/users/${profileInfo.id}`
   const navigate = useNavigate();
+  const currentUser = useAtomValue(userAtom)
+
+  const authCurrentUser = () => {
+    if(profileInfo.id === currentUser.id) {
+      return true
+    } else {
+      return false
+    }
+  }
 
   useEffect(() => {
-    fetch(fetchUrl, {
-        method: 'get', 
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${Cookies.get('token')}`
-        },
-      })
-    .then(response => response.json())
-    .then(data => { 
-        console.log('fetch');
-        setProfileInfo(data);
-      })
-    .catch((error) => {
-        console.error(error);
-      });
+
+      fetch(fetchUrl, {
+          method: 'get', 
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${Cookies.get('token')}`
+          },
+        })
+      .then(response => response.json())
+      .then(data => { 
+          if (authCurrentUser) {
+            setProfileInfo(data);
+          } else {
+            console.error("You are not allowed to edit this profile")
+          }
+        })
+      .catch((error) => {
+          console.error(error);
+        });
   }, []);
 
   const updateProfile = (e) => {
@@ -43,7 +58,11 @@ const EditProfile = () => {
       })
     .then(response => response.json())
     .then(data => { 
-        setProfileInfo(data);
+          if (authCurrentUser) {
+            setProfileInfo(data);
+          } else {
+            console.error("You are not allowed to edit this profile")
+          }
         navigate('/me');
       })
     .catch((error) => {

@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom"
 
 const Post = () => {
   const { id } = useParams();
-  const fetchUrl = `http://localhost:1337/api/posts/${id}`;
+  const fetchUrl = `http://localhost:1337/api/posts/${id}?populate=*`;
   const [ post, setPost ] = useState({});
 
   useEffect(() => {
@@ -25,6 +25,7 @@ const Post = () => {
         }
       }) 
     .then(data => { 
+        console.log(data)
         setPost(data.data.attributes);
       })
     .catch((error) => {
@@ -37,6 +38,7 @@ const Post = () => {
       <h1>Hello</h1>
       <h3>{post.text}</h3>
       <Link to={`/post/${id}/edit`}>Edit Post</Link>
+
   </div>
   )
 }

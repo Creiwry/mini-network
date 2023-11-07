@@ -1,11 +1,14 @@
+import { useSetAtom } from "jotai";
 import Cookies from "js-cookie"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
+import { userAtom } from "../atoms";
 
 const SignIn = () => {
   const [ identifier, setIdentifier] = useState('')
   const [ password, setPassword ] = useState('')
   const [ pending, setPending ] = useState(false)
+  const setUser = useSetAtom(userAtom)
   const signUpUrl = 'http://localhost:1337/api/auth/local/';
   const navigate = useNavigate();
 
@@ -26,7 +29,7 @@ const SignIn = () => {
     .then(response => response.json())
     .then(data => {
       Cookies.set('token', data.jwt);
-      console.log(data.jwt);
+      setUser(data.user)
       setPending(false);
       navigate('/home');
     })
