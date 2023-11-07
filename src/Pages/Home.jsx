@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { PostList } from "./PostList";
+import { PostList } from "../Components/PostList";
 import { Link } from "react-router-dom";
 
 const Home = () => {

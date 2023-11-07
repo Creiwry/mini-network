@@ -8,6 +8,8 @@ const Post = () => {
   const { id } = useParams();
   const fetchUrl = `http://localhost:1337/api/posts/${id}?populate=*`;
   const [ post, setPost ] = useState({});
+  const [ username, setUsername ] = useState("");
+  const [ userId, setUserId ] =useState(null)
 
   useEffect(() => {
     fetch(fetchUrl, {
@@ -25,7 +27,8 @@ const Post = () => {
         }
       }) 
     .then(data => { 
-        console.log(data)
+        setUsername(data.data.attributes.users_permissions_user.data.attributes.username)
+        setUserId(data.data.attributes.users_permissions_user.data.id)
         setPost(data.data.attributes);
       })
     .catch((error) => {
@@ -37,6 +40,9 @@ const Post = () => {
   <div>
       <h1>Hello</h1>
       <h3>{post.text}</h3>
+      <Link to={`/users/${userId}`}>
+        <p>By: {username}</p>
+      </Link>
       <Link to={`/post/${id}/edit`}>Edit Post</Link>
 
   </div>

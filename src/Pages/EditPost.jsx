@@ -62,7 +62,7 @@ const EditPost = () => {
           } else {
             console.error("You are not allowed to edit this profile")
           }
-        navigate('/me');
+        navigate(-1);
       })
     .catch((error) => {
         console.error(error);

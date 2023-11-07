@@ -39,7 +39,7 @@ function App() {
               <NewPost />
             </PrivateRoute>
           } />
-          <Route path="/me" element={
+          <Route path="/users/:id" element={
             <PrivateRoute>
                 <Profile />
             </PrivateRoute>

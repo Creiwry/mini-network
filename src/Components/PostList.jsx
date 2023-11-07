@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 
+/* eslint-disable */
 const PostList = ({ posts }) => {
-
   return (
     <div>
       <h1>Posts</h1>

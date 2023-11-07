@@ -26,7 +26,7 @@ const NewPost = () => {
     .then(response => response.json())
     .then(data => { 
         setPost(data);
-        navigate('/me');
+        navigate(`/users/${user.id}`);
       })
     .catch((error) => {
         console.error(error);
