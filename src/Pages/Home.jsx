@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { PostList } from "./PostList";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const url = 'http://localhost:1337/api/posts';
@@ -22,6 +23,7 @@ const Home = () => {
       { posts ? <PostList posts={posts} />
         : <p>No posts</p>
     }
+      <Link to="/posts/new">New Post</Link>
     </div>
   )
 }

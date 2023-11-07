@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 const PostList = ({ posts }) => {
 
   return (
@@ -5,9 +7,12 @@ const PostList = ({ posts }) => {
       <h1>Posts</h1>
       {posts.map((post) => {
       return (
-          <div key={post.id}>
+        <Link key={post.id} to={`/post/${post.id}`}>
+          <div>
+            <p>{post.attributes.user}</p>
             <p>{post.attributes.text}</p>
           </div>
+        </Link>
       )})}
     </div>
   )

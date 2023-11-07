@@ -1,17 +1,17 @@
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-const EditPost = () => {
-  const { id } = useParams();
-  const url = `http://localhost:1337/api/posts/${id}`;
+const NewPost = () => {
+  const userUrl = 'http://localhost:1337/api/users/me'
+  const url = `http://localhost:1337/api/posts/`;
   const [ post, setPost ] = useState('')
+  const [ user, setUser ] = useState('')
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(url, {
+    fetch(userUrl, {
         method: 'get', 
         headers: {
           'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ const EditPost = () => {
       })
     .then(response => response.json())
     .then(data => { 
-        setPost(data.data.attributes.text);
+        setUser(data.id);
       })
     .catch((error) => {
         console.error(error);
@@ -29,10 +29,10 @@ const EditPost = () => {
 
   const updatePost = (e) => {
     e.preventDefault();
-    const postInfo = {data:{ text: post }}
+    const postInfo = {data:{ text: post, user: user }}
 
     fetch(url, {
-        method: 'put', 
+        method: 'post', 
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${Cookies.get('token')}`
@@ -51,7 +51,7 @@ const EditPost = () => {
 
   return ( 
     <div className="flex flex-col">
-      <h1>Edit Post</h1> 
+      <h1>New Post</h1> 
       <form onSubmit={updatePost} className="flex flex-col m-2">
             <label>Text:</label>
         <textarea type="text" value={post ?? ''} onChange={(e) => setPost(e.target.value)} />
@@ -61,4 +61,4 @@ const EditPost = () => {
   )
 }
 
-export { EditPost }
+export { NewPost }

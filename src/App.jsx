@@ -10,6 +10,8 @@ import { Profile } from './Pages/Profile'
 import { Navbar } from './Components/Navbar'
 import { EditProfile } from './Pages/EditProfile'
 import { Post } from './Pages/Post'
+import { EditPost } from './Pages/EditPost'
+import { NewPost } from './Pages/NewPost'
 
 function App() {
 
@@ -22,7 +24,21 @@ function App() {
           <Route path="/signIn" element={<SignIn />} />
           <Route path="/register" element={<Register />} />
           <Route path='/home' element={<Home />} />
-          <Route path='/post/:id' element={<Post />} />
+          <Route path='/post/:id' element={
+            <PrivateRoute>
+              <Post />
+            </PrivateRoute>
+          } />
+          <Route path='/post/:id/edit' element={
+            <PrivateRoute>
+              <EditPost />
+            </PrivateRoute>
+          } />
+          <Route path='/posts/new' element={
+            <PrivateRoute>
+              <NewPost />
+            </PrivateRoute>
+          } />
           <Route path="/me" element={
             <PrivateRoute>
                 <Profile />
