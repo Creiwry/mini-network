@@ -1,4 +1,4 @@
-import { useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -7,7 +7,7 @@ import { RESET } from "jotai/utils";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const setUser = useSetAtom(userAtom)
+  const [user, setUser] = useAtom(userAtom)
 
   const signOut = () => {
     Cookies.remove('token')
@@ -21,7 +21,7 @@ const Navbar = () => {
         <Link to='/signIn'>Sign In</Link>
         <Link to='/register'>Register</Link>
         <Link to='/home'>Home</Link>
-        <Link to='/me'>My Profile</Link>
+        <Link to={`/users/${user.id}`}>My Profile</Link>
         <button onClick={signOut}>Sign Out</button>
       </div>
   </div>

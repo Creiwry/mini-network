@@ -42,7 +42,7 @@ const EditProfile = () => {
       .catch((error) => {
           console.error(error);
         });
-  }, []);
+  }, [authCurrentUser]);
 
   const updateProfile = (e) => {
     e.preventDefault();
@@ -63,7 +63,7 @@ const EditProfile = () => {
           } else {
             console.error("You are not allowed to edit this profile")
           }
-        navigate('/me');
+        navigate(`/users/${currentUser.id}`);
       })
     .catch((error) => {
         console.error(error);

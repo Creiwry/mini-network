@@ -5,19 +5,47 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { userAtom } from "../atoms";
+import { useCallback } from "react";
+
 
 const EditPost = () => {
   const { id } = useParams();
   const url = `http://localhost:1337/api/posts/${id}?populate=*`;
-  const [ post, setPost ] = useState('')
+  const urlDelete = `http://localhost:1337/api/posts/${id}`;
+  const [ post, setPost ] = useState({data:{ attributes:{text: "", users_permissions_user: {id: null} }}})
   const navigate = useNavigate();
   const currentUser = useAtomValue(userAtom)
 
-  const authCurrentUser = (post) => {
+  const authCurrentUser = useCallback((post) => {
     if(post.users_permissions_user.data.id === currentUser.id) {
       return true
     } else {
       return false
+    }
+  }, [currentUser.id])
+
+  const deletePost = (e) => {
+    e.preventDefault();
+    console.log(post)
+    if (authCurrentUser(post.data.attributes)) {
+
+      fetch(urlDelete, {
+          method: 'delete', 
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${Cookies.get('token')}`
+          },
+        })
+      .then(response => response.json())
+      .then(() => { 
+          console.log("delete request sent")
+          navigate("/home");
+        })
+      .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      console.error("You are not allowed to delete this post")
     }
   }
 
@@ -31,8 +59,9 @@ const EditPost = () => {
       })
     .then(response => response.json())
     .then(data => { 
+        console.log(data)
           if (authCurrentUser(data.data.attributes)) {
-            setPost(data.data.attributes.text);
+            setPost(data);
           } else {
             console.error("You are not allowed to edit this post")
             navigate("/home")
@@ -41,11 +70,11 @@ const EditPost = () => {
     .catch((error) => {
         console.error(error);
       });
-  }, [url]);
+  }, [url, authCurrentUser, navigate]);
 
   const updatePost = (e) => {
     e.preventDefault();
-    const postInfo = {data:{ text: post, users_permissions_user: {id: currentUser.id} }}
+    const postInfo = {data:{ text: post.data.attributes.text, users_permissions_user: {id: currentUser.id} }}
 
     fetch(url, {
         method: 'put', 
@@ -56,28 +85,28 @@ const EditPost = () => {
       body: JSON.stringify(postInfo),
       })
     .then(response => response.json())
-    .then(data => { 
-          if (authCurrentUser(data.data.attributes)) {
-            setPost(data);
-          } else {
-            console.error("You are not allowed to edit this profile")
-          }
-        navigate('/me');
+    .then(() => { 
+        navigate(-1);
       })
     .catch((error) => {
         console.error(error);
       });
   };
 
-  return ( 
+  return (
+    <>
+    {post ? 
     <div className="flex flex-col">
       <h1>Edit Post</h1> 
       <form onSubmit={updatePost} className="flex flex-col m-2">
             <label>Text:</label>
-        <textarea type="text" value={post ?? ''} onChange={(e) => setPost(e.target.value)} />
+        <textarea type="text" value={post.data.attributes.text} onChange={(e) => setPost({data:{ attributes:{text: e.target.value, users_permissions_user: {id: currentUser.id} }}})} />
         <button className="bg-rose-500 mt-3">Edit Post</button>
       </form>
+      <button className="bg-rose-500 mt-3" onClick={deletePost}>Delete Post</button>
     </div>
+      : <p>Loading</p>}
+      </>
   )
 }
 

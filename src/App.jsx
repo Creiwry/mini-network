@@ -23,7 +23,11 @@ function App() {
         <Routes>
           <Route path="/signIn" element={<SignIn />} />
           <Route path="/register" element={<Register />} />
-          <Route path='/home' element={<Home />} />
+          <Route path='/home' element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          } />
           <Route path='/post/:id' element={
             <PrivateRoute>
               <Post />
@@ -39,7 +43,7 @@ function App() {
               <NewPost />
             </PrivateRoute>
           } />
-          <Route path="/me" element={
+          <Route path="/users/:id" element={
             <PrivateRoute>
                 <Profile />
             </PrivateRoute>

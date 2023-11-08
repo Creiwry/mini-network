@@ -1,23 +1,40 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { PostList } from "./PostList";
+import { PostList } from "../Components/PostList";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Home = () => {
-  const url = 'http://localhost:1337/api/posts';
+  const url = `http://localhost:1337/api/posts?populate[0]=users_permissions_user`
   const [ posts, setPosts ] = useState([]);
 
   const getData = async () => {
-    const response = await fetch(url)
-    .then(response => response.json());
-    setPosts(response.data);
+    fetch(url, {
+        method: 'get', 
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${Cookies.get('token')}`
+        },
+      })
+    .then(response => {
+        if(!response.ok){
+          console.log("Error!")
+        } else {
+          return response.json()
+        }
+      }) 
+    .then(data => { 
+        setPosts(data.data);
+      })
+    .catch((error) => {
+        console.error(error);
+      });
   }
 
   useEffect(() => {
     getData();
   }, [setPosts]);
 
-  console.log(posts)
   return (
     <div>
       { posts ? <PostList posts={posts} />

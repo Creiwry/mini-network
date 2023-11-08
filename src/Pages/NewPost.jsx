@@ -12,7 +12,6 @@ const NewPost = () => {
 
   const updatePost = (e) => {
     e.preventDefault();
-    console.log(user.id)
     const postInfo = {data:{ text: post, users_permissions_user: { id: user.id } }}
 
     fetch(url, {
@@ -26,7 +25,7 @@ const NewPost = () => {
     .then(response => response.json())
     .then(data => { 
         setPost(data);
-        navigate('/me');
+        navigate(`/users/${user.id}`);
       })
     .catch((error) => {
         console.error(error);
@@ -39,7 +38,7 @@ const NewPost = () => {
       <form onSubmit={updatePost} className="flex flex-col m-2">
             <label>Text:</label>
         <textarea type="text" value={post ?? ''} onChange={(e) => setPost(e.target.value)} />
-        <button className="bg-rose-500 mt-3">Edit Post</button>
+        <button className="bg-rose-500 mt-3">Post</button>
       </form>
     </div>
   )
